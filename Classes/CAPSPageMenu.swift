@@ -24,6 +24,7 @@ import UIKit
     
     optional func willMoveToPage(controller: UIViewController, index: Int)
     optional func didMoveToPage(controller: UIViewController, index: Int)
+    optional func didScrollVertical(pos: CGFloat)
 }
 
 class MenuItemView: UIView {
@@ -597,17 +598,17 @@ public class CAPSPageMenu: UIViewController, UIScrollViewDelegate, UIGestureReco
                             
                             lastControllerScrollViewContentOffset = scrollView.contentOffset.x
                         }
-                        
-                        var ratio : CGFloat = 1.0
-                        
-                        
-                        // Calculate ratio between scroll views
-                        ratio = (menuScrollView.contentSize.width - self.view.frame.width) / (controllerScrollView.contentSize.width - self.view.frame.width)
-                        
+
                         if menuScrollView.contentSize.width > self.view.frame.width {
-                            var offset : CGPoint = menuScrollView.contentOffset
-                            offset.x = controllerScrollView.contentOffset.x * ratio
-                            menuScrollView.setContentOffset(offset, animated: false)
+                          // Calculate ratio between scroll views
+                          let ratio: CGFloat = (menuScrollView.contentSize.width - self.view.frame.width) / (controllerScrollView.contentSize.width - self.view.frame.width)
+
+                          var offset = menuScrollView.contentOffset
+                          offset.x = controllerScrollView.contentOffset.x * ratio
+
+                          delegate?.didScrollVertical?(offset.x)
+
+                          menuScrollView.setContentOffset(offset, animated: false)
                         }
                         
                         // Calculate current page
