@@ -851,6 +851,18 @@ public class CAPSPageMenu: UIViewController, UIScrollViewDelegate, UIGestureReco
     
     
     // MARK: - Remove/Add Page
+    func initNextVC(index: Int) {
+        guard index < controllerArray.count else {
+          return
+        }
+
+        let newVC = controllerArray[index]
+        newVC.view.frame = CGRectMake(self.view.frame.width * CGFloat(index), menuHeight, self.view.frame.width, self.view.frame.height - menuHeight)
+
+        self.addChildViewController(newVC)
+        self.controllerScrollView.addSubview(newVC.view)
+    }
+
     func addPageAtIndex(index : Int) {
         // Call didMoveToPage delegate function
         let currentController = controllerArray[index]
@@ -865,8 +877,10 @@ public class CAPSPageMenu: UIViewController, UIScrollViewDelegate, UIGestureReco
         self.addChildViewController(newVC)
         self.controllerScrollView.addSubview(newVC.view)
         newVC.didMoveToParentViewController(self)
+
+        initNextVC(index + 1)
     }
-    
+
     func removePageAtIndex(index : Int) {
         let oldVC = controllerArray[index]
         
